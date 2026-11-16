@@ -1,0 +1,210 @@
+/* Archivo: public/css/style.css — Estilos del proyecto (CSS3 nativo, responsive, tema oscuro y claro) */
+
+/* ===== TEMA OSCURO (por defecto): para cambiar colores se tocan solo estas variables ===== */
+:root {
+    color-scheme: dark;
+    --tarjeta: rgba(23, 26, 33, .78);
+    --campo: #0f1218;
+    --texto: #e6e8ee;
+    --texto-suave: #9aa3b5;
+    --primario: #7c9cff;
+    --primario-hover: #9bb3ff;
+    --texto-boton: #0d0f14;
+    --error: #ff7b7b;
+    --ok: #5fd38d;
+    --borde: #2c3342;
+    --fondo-error: rgba(255, 123, 123, .12);
+    --borde-error: rgba(255, 123, 123, .35);
+    --fondo-ok: rgba(95, 211, 141, .12);
+    --borde-ok: rgba(95, 211, 141, .35);
+    --sombra: 0 14px 40px rgba(0, 0, 0, .55);
+    --mancha1: rgba(124, 156, 255, .38);
+    --mancha2: rgba(176, 108, 255, .30);
+    --degradado: linear-gradient(160deg, #0a0c12 0%, #121626 55%, #0a0c12 100%);
+}
+
+/* ===== TEMA CLARO (lo activa el botón de la esquina) ===== */
+:root[data-tema="claro"] {
+    color-scheme: light;
+    --tarjeta: rgba(255, 255, 255, .8);
+    --campo: #ffffff;
+    --texto: #1f2937;
+    --texto-suave: #5b6475;
+    --primario: #3b5bdb;
+    --primario-hover: #2f49b0;
+    --texto-boton: #ffffff;
+    --error: #c92a2a;
+    --ok: #2b8a3e;
+    --borde: #cbd2e1;
+    --fondo-error: #ffe3e3;
+    --borde-error: #f5b5b5;
+    --fondo-ok: #d3f9d8;
+    --borde-ok: #a4e0ae;
+    --sombra: 0 14px 40px rgba(60, 80, 140, .18);
+    --mancha1: rgba(91, 123, 255, .35);
+    --mancha2: rgba(255, 140, 200, .30);
+    --degradado: linear-gradient(160deg, #f3f6ff 0%, #e7ecfb 55%, #f6f1ff 100%);
+}
+
+/* El padding no agranda los elementos */
+* { box-sizing: border-box; }
+
+/* Flexbox: centra la tarjeta en la pantalla */
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    background: var(--degradado);
+    background-attachment: fixed;
+    color: var(--texto);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    transition: background .3s, color .3s;
+}
+
+/* Fondo decorativo: dos luces de color que se mueven despacio */
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    z-index: -1;
+    width: 55vmax;
+    height: 55vmax;
+    border-radius: 50%;
+    pointer-events: none;
+}
+body::before {
+    top: -18vmax; left: -14vmax;
+    background: radial-gradient(circle, var(--mancha1) 0%, transparent 68%);
+    animation: flotar 18s ease-in-out infinite alternate;
+}
+body::after {
+    bottom: -22vmax; right: -16vmax;
+    background: radial-gradient(circle, var(--mancha2) 0%, transparent 68%);
+    animation: flotar 22s ease-in-out infinite alternate-reverse;
+}
+@keyframes flotar {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(6vmax, 5vmax) scale(1.12); }
+}
+@media (prefers-reduced-motion: reduce) {
+    body::before, body::after { animation: none; }
+}
+
+/* Botón de tema (esquina superior derecha): muestra el modo al que se cambia */
+.btn-tema {
+    position: fixed;
+    top: .9rem;
+    right: .9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    margin: 0;
+    padding: .55rem 1rem;
+    border: 1px solid var(--borde);
+    border-radius: 999px;
+    background: var(--tarjeta);
+    backdrop-filter: blur(8px);
+    color: var(--texto);
+    font-size: .9rem;
+    font-weight: 600;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: var(--sombra);
+}
+.btn-tema:hover { background: var(--tarjeta); transform: scale(1.05); }
+
+/* Tarjeta con efecto vidrio */
+.card {
+    width: 100%;
+    max-width: 420px;
+    background: var(--tarjeta);
+    backdrop-filter: blur(14px);
+    padding: 2rem;
+    border: 1px solid var(--borde);
+    border-radius: 16px;
+    box-shadow: var(--sombra);
+}
+
+h1 { margin-top: 0; font-size: 1.5rem; text-align: center; }
+
+/* Formulario con grid: una sola columna */
+form { display: grid; gap: .4rem; }
+
+label { font-weight: 600; margin-top: .6rem; }
+
+input {
+    width: 100%;
+    padding: .7rem .85rem;
+    background: var(--campo);
+    color: var(--texto);
+    border: 1px solid var(--borde);
+    border-radius: 8px;
+    font-size: 1rem;
+}
+input:focus { outline: 2px solid var(--primario); border-color: transparent; }
+input.invalido { border-color: var(--error); }   /* La clase la agrega script.js */
+
+.error { color: var(--error); min-height: 1.1em; font-size: .85rem; }
+
+/* Botones (y el enlace "Cerrar sesión" con aspecto de botón) */
+button,
+.boton {
+    display: block;
+    margin-top: 1rem;
+    padding: .75rem;
+    border: 0;
+    border-radius: 8px;
+    background: var(--primario);
+    color: var(--texto-boton);
+    font-size: 1rem;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+}
+button:hover,
+.boton:hover { background: var(--primario-hover); }
+
+.alerta { padding: .7rem .9rem; border-radius: 8px; font-size: .95rem; }
+.alerta-error { background: var(--fondo-error); color: var(--error); border: 1px solid var(--borde-error); }
+/* Contraseña nueva generada (recuperar.php) */
+.clave-nueva {
+    margin: .8rem 0;
+    padding: .9rem;
+    background: var(--campo);
+    border: 1px dashed var(--primario);
+    border-radius: 8px;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-align: center;
+    user-select: all;           /* un clic selecciona toda la contraseña */
+}
+
+.alerta-ok { background: var(--fondo-ok); color: var(--ok); border: 1px solid var(--borde-ok); }
+
+.enlace { text-align: center; margin: .9rem 0 0; color: var(--texto-suave); }
+.enlace a { color: var(--primario); font-weight: 600; text-decoration: none; }
+.enlace a:hover { text-decoration: underline; }
+
+/* Escritorio: datos del usuario e historial de accesos */
+.datos { list-style: none; margin: 1rem 0 .4rem; padding: 0; color: var(--texto-suave); font-size: .95rem; }
+.datos li { margin: .25rem 0; }
+.datos strong { color: var(--texto); }
+.subtitulo { margin: 1.2rem 0 .4rem; font-size: 1.05rem; }
+.tabla-accesos { width: 100%; border-collapse: collapse; font-size: .9rem; }
+.tabla-accesos th, .tabla-accesos td { padding: .45rem .5rem; border-bottom: 1px solid var(--borde); text-align: left; }
+.tabla-accesos th { color: var(--texto-suave); font-weight: 600; }
+.res-exitoso { color: var(--ok); font-weight: 600; }
+.res-fallido { color: var(--error); font-weight: 600; }
+
+/* Responsive: en celulares se reduce el relleno */
+@media (max-width: 480px) {
+    .card { padding: 1.25rem; }
+    h1 { font-size: 1.3rem; }
+    .btn-tema { padding: .5rem .8rem; font-size: .85rem; }
+}
